@@ -1,6 +1,9 @@
 from django.db import models
 from django.db.models import Count, F, ExpressionWrapper, Avg
 from django.utils import timezone
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+
 
 # Vendor model to store vendor information and performance metrics
 class Vendor(models.Model):
@@ -31,7 +34,7 @@ class Vendor(models.Model):
 
     # Method to calculate average response time for the vendor
     def calculate_average_response_time(self):
-        ack_pos = self.purchase_orders.filter(status='completed', acknowledgment_date__isnull=False)
+        ack_pos = self.purchase_orders.filter(status='completed')
         response_time = ack_pos.annotate(
             time_diff=ExpressionWrapper(F('acknowledgment_date') - F('issue_date'), output_field=models.DurationField())
         ).aggregate(avg_time=Avg('time_diff'))['avg_time']
@@ -40,11 +43,12 @@ class Vendor(models.Model):
 
     # Method to calculate fulfillment rate for the vendor
     def calculate_fulfillment_rate(self):
+        completed_pos = self.purchase_orders.filter(status='completed')
         total_pos = self.purchase_orders.count()
-        completed_pos_without_issues = self.purchase_orders.filter(status='completed', quality_rating__isnull=True)
-        fulfillment_rate = completed_pos_without_issues.count() / total_pos if total_pos > 0 else 0
+        fulfillment_rate = completed_pos.count() / total_pos if total_pos > 0 else 0
         self.fulfillment_rate = fulfillment_rate
         self.save()
+
 
     def __str__(self):
         return self.name
@@ -67,10 +71,11 @@ class PurchaseOrder(models.Model):
     quality_rating = models.FloatField(null=True, blank=True)
     issue_date = models.DateTimeField()
     acknowledgment_date = models.DateTimeField(null=True, blank=True)
+    
 
     # Method to acknowledge a purchase order and calculate average response time for the vendor
     def acknowledge_order(self):
-        if self.acknowledgment_date is None:
+        if self.status != 'completed' and self.acknowledgment_date is None:
             self.acknowledgment_date = timezone.now()
             self.save()
             self.vendor.calculate_average_response_time()
@@ -101,3 +106,55 @@ class HistoricalPerformance(models.Model):
 
     def __str__(self):
         return f"{self.vendor.name} - Performance on {self.date}"
+
+
+
+
+
+# Signals are from here
+
+
+@receiver(post_save, sender=PurchaseOrder)
+def post_save_order(sender, instance, created, *args, **kwargs):
+    print("Purchase order created")
+
+
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+# Signal handler for PurchaseOrder update
+@receiver(post_save, sender=PurchaseOrder)
+def update_vendor_metrics(sender, instance, **kwargs):
+    if instance.status == 'completed':
+        logger.info('Signal triggered!')
+        instance.vendor.calculate_on_time_delivery_rate()
+        instance.vendor.calculate_quality_rating_avg()
+        instance.vendor.calculate_fulfillment_rate()
+        print("Updated Vendor Metrics")
+
+
+# Signal handler for PurchaseOrder acknowledgment
+@receiver(pre_save, sender=PurchaseOrder)
+def acknowledge_order(sender, instance, **kwargs):
+    if instance.acknowledgment_date is None:
+        instance.acknowledgment_date = timezone.now()
+        instance.vendor.calculate_average_response_time()
+        print("acknowledgment_date created")
+
+
+@receiver(post_save, sender=PurchaseOrder)
+def create_historical_performance(sender, instance, created, **kwargs):
+    if instance.status == 'completed' and created:
+        vendor = instance.vendor
+        HistoricalPerformance.objects.create(
+            vendor=vendor,
+            date=instance.delivery_date,
+            on_time_delivery_rate=vendor.on_time_delivery_rate,
+            quality_rating_avg=vendor.quality_rating_avg,
+            average_response_time=vendor.average_response_time,
+            fulfillment_rate=vendor.fulfillment_rate,
+        )
+        print("HistoricalPerformance created")
