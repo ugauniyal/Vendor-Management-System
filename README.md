@@ -2,7 +2,21 @@
 A Vendor Management System using Django and Django REST Framework. This system will handle vendor profiles, track purchase orders, and calculate vendor performance metrics.
 
 
+#### You can use Swagger for ease of using the APIs.
+
+
 ## API Reference
+
+
+### Get Token
+<br/>
+
+```http
+  GET /api-token-auth/
+```
+#### Pass the token in the headers to get authenticated. (Format - token 'your-token')
+
+<br/>
 
 ### Vendor
 <br/>

@@ -4,25 +4,31 @@ from rest_framework.exceptions import ValidationError, NotFound
 from .models import Vendor, PurchaseOrder, HistoricalPerformance
 from .serializers import AcknowledgePurchaseOrderSerializer, VendorPerformanceSerializer, VendorSerializer, PurchaseOrderSerializer, HistoricalPerformanceSerializer
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
+from rest_framework.authentication import TokenAuthentication
 
 
 class VendorListCreateView(generics.ListCreateAPIView):
     # Handles GET (list) and POST (create) requests for Vendors
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
 
 
 class VendorRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     # Handles GET (retrieve), PUT (update), and DELETE (destroy) requests for a Vendor
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
     lookup_field = 'pk'
 
 
 class PurchaseOrderListCreateView(generics.ListCreateAPIView):
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
     # Handles GET (list) and POST (create) requests for Purchase Orders
     queryset = PurchaseOrder.objects.all()
     serializer_class = PurchaseOrderSerializer
@@ -30,6 +36,8 @@ class PurchaseOrderListCreateView(generics.ListCreateAPIView):
 
 class PurchaseOrderRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     # Handles GET (retrieve), PUT (update), and DELETE (destroy) requests for a Purchase Order
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
     queryset = PurchaseOrder.objects.all()
     serializer_class = PurchaseOrderSerializer
     lookup_field = 'pk'
@@ -37,6 +45,9 @@ class PurchaseOrderRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIVi
 
 class HistoricalPerformanceListView(generics.ListAPIView):
     # Handles GET (list) requests for Historical Performances
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
+
     queryset = HistoricalPerformance.objects.all()
     serializer_class = HistoricalPerformanceSerializer
     
@@ -44,6 +55,8 @@ class HistoricalPerformanceListView(generics.ListAPIView):
 
 class VendorPerformanceView(generics.RetrieveAPIView):
     # Handles GET (retrieve) request for Vendor Performance
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = VendorPerformanceSerializer
     lookup_field = 'pk'
 
@@ -74,6 +87,8 @@ class VendorPerformanceView(generics.RetrieveAPIView):
 
 class AcknowledgePurchaseOrderView(generics.UpdateAPIView):
     serializer_class = AcknowledgePurchaseOrderSerializer
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self):
         po_id = self.kwargs['pk']

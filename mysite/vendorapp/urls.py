@@ -20,5 +20,5 @@ urlpatterns = [
     path('api/historical_performance/', HistoricalPerformanceListView.as_view(), name='historical-performance-list-view'),
     path('api/vendors/<int:pk>/performance/', VendorPerformanceView.as_view(), name='vendor-performance'),
     path('api/purchase_orders/<int:pk>/acknowledge/', AcknowledgePurchaseOrderView.as_view(), name='acknowledge-purchase-order'),
-    # path('api/token/', obtain_auth_token, name='token_obtain_pair'),
+    path('api-token-auth/', obtain_auth_token, name='token_obtain_pair'),
 ]
