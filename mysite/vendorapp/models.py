@@ -11,6 +11,7 @@ class Vendor(models.Model):
     contact_details = models.TextField()
     address = models.TextField()
     vendor_code = models.CharField(max_length=50, unique=True)
+    email = models.EmailField()
     on_time_delivery_rate = models.FloatField(default=0)  # Tracks the percentage of on-time deliveries
     quality_rating_avg = models.FloatField(default=0)  # Average rating of quality based on purchase orders
     average_response_time = models.FloatField(default=0)  # Average time taken to acknowledge purchase orders

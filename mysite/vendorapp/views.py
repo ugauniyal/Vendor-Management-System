@@ -1,6 +1,10 @@
+from django.http import HttpResponse
 from rest_framework import generics, status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
+
+from vendorapp.tasks import send_performance_email_to_vendors
 from .models import Vendor, PurchaseOrder, HistoricalPerformance
 from .serializers import AcknowledgePurchaseOrderSerializer, VendorPerformanceSerializer, VendorSerializer, PurchaseOrderSerializer, HistoricalPerformanceSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -99,3 +103,8 @@ class AcknowledgePurchaseOrderView(generics.UpdateAPIView):
         purchase_order.acknowledge_order()  # Update acknowledgment_date
         return Response({"message": "Acknowledgment date updated"})
 
+
+@api_view()
+def trigger_performance_email(request):
+    send_performance_email_to_vendors.delay()
+    return Response({"message": "Performance email task triggered successfully."})

@@ -232,3 +232,31 @@ To run tests, run the following command.
 ```bash
   python manage.py vendorapp.test
 ```
+
+
+## Running Celery Tasks
+
+Firstly run redis (broker).
+
+```bash
+  redis-server
+```
+
+
+
+To run celery tasks, run the following command.
+
+
+Celery Worker
+
+```bash
+  celery -A mysite worker -l info
+```
+
+<br/>
+
+Celery Beat for automatic scheduler
+
+```bash
+  celery -A mysite beat -l info
+```

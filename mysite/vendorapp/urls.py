@@ -10,7 +10,7 @@ from vendorapp.views import (
 )
 from rest_framework.authtoken.views import obtain_auth_token
 
-
+from vendorapp import views
 
 urlpatterns = [
     path('api/vendors/', VendorListCreateView.as_view(), name='vendor-list-create'),
@@ -21,4 +21,5 @@ urlpatterns = [
     path('api/vendors/<int:pk>/performance/', VendorPerformanceView.as_view(), name='vendor-performance'),
     path('api/purchase_orders/<int:pk>/acknowledge/', AcknowledgePurchaseOrderView.as_view(), name='acknowledge-purchase-order'),
     path('api-token-auth/', obtain_auth_token, name='token_obtain_pair'),
+    path('trigger-performance-email/', views.trigger_performance_email, name='trigger-performance-email'),
 ]
