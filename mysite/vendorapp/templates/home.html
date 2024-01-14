@@ -1,31 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>API Information</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
             margin: 20px;
             padding: 20px;
-            background-color: #f7f7f7;
-        }
-
-        h1 {
             color: #333;
         }
 
-        p {
+        h1 {
+            color: #428bca;
+        }
+
+        h2 {
+            color: #428bca;
+            margin-top: 20px;
+        }
+
+        h3 {
+            color: #428bca;
+            margin-top: 10px;
+        }
+
+        p, code {
             margin-bottom: 10px;
-            font-size: 16px;
-            line-height: 1.6;
-            color: #555;
+        }
+
+        code {
+            padding: 2px 5px;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
         }
     </style>
 </head>
 <body>
-    <h1>API Information:</h1>
-    {% for info in api_info %}
-        <p>{{ info }}</p>
-    {% endfor %}
+    <h1>API Documentation</h1>
+
+    <h2>Get Token</h2>
+    <p><strong>GET /api-token-auth/</strong><br>
+    Pass the token in the headers to get authenticated. (Format - <code>token 'your-token'</code>)</p>
+
+    <h2>Vendor</h2>
+
+    <h3>Get vendors list</h3>
+    <p><strong>GET /api/vendors/</strong><br>
+    <strong>Type:</strong> json<br>
+    <strong>Description:</strong> Get the vendor data response.</p>
+
+    <h3>Create vendor</h3>
+    <p><strong>POST /api/vendors/</strong><br>
+    <strong>Body:</strong> json<br>
+    <strong>Required fields:</strong> name, contact_details, address, vendor_code</p>
+    <code>
+    {
+        "name": "name",
+        "contact_details": "contact_details",
+        "address": "address",
+        "vendor_code": "vendor_code",
+        "on_time_delivery_rate": "on_time_delivery_rate",
+        "quality_rating_avg": "quality_rating_avg",
+        "average_response_time": "average_response_time",
+        "fulfillment_rate": "fulfillment_rate"
+    }
+    </code>
+
+    <h3>Get specific vendor</h3>
+    <p><strong>GET /api/vendors/{vendor_id}/</strong><br>
+    <strong>Parameter:</strong> id (int) - Get the specific vendor data response.</p>
+
+    <h3>Get specific vendor performance</h3>
+    <p><strong>GET /api/vendors/{vendor_id}/performance</strong><br>
+    <strong>Parameter:</strong> id (int) - Get the specific vendor performance data response.</p>
+
+    <h3>Update Vendor</h3>
+    <p><strong>PUT /api/vendors/{vendor_id}/</strong><br>
+    <strong>Body:</strong> json<br>
+    <strong>Required fields:</strong> id, name, contact_details, address, vendor_code</p>
+    <code>
+    {
+        "id": 1,
+        "name": "name",
+        "contact_details": "contact_details",
+        "address": "address",
+        "vendor_code": "vendor_code",
+        "on_time_delivery_rate": "on_time_delivery_rate",
+        "quality_rating_avg": "quality_rating_avg",
+        "average_response_time": "average_response_time",
+        "fulfillment_rate": "fulfillment_rate"
+    }
+    </code>
+
+    <h3>Delete Vendor</h3>
+    <p><strong>DELETE /api/vendors/{vendor_id}/</strong><br>
+    <strong>Parameter:</strong> id (int) - Delete the specific vendor.</p>
+
+    <h2>Purchase Order</h2>
+
+    <h3>Get purchase order list</h3>
+    <p><strong>GET /api/purchase_orders/</strong><br>
+    <strong>Type:</strong> json<br>
+    <strong>Description:</strong> Get all the purchase order data response.</p>
+
+    <h3>Create purchase order</h3>
+    <p><strong>POST /api/purchase_orders/</strong><br>
+    <strong>Body:</strong> json<br>
+    <strong>Required fields:</strong> po_number, order_date, delivery_date, items, quantity, status, quality_rating, issue_date, acknowledgment_date, vendor</p>
+    <code>
+    {
+        "po_number": "po_number",
+        "order_date": "order_date",
+        "delivery_date": "delivery_date",
+        "items": "{ json data }",
+        "quantity": "quantity",
+        "status": "status",
+        "quality_rating": "quality_rating",
+        "issue_date": "issue_date",
+        "acknowledgment_date": "acknowledgment_date",
+        "vendor": "vendor_id"
+    }
+    </code>
+
+    <h3>Get specific purchase order</h3>
+    <p><strong>GET /api/purchase_orders/{po_id}/</strong><br>
+    <strong>Parameter:</strong> id (int) - Get the specific purchase order's data response.</p>
+
+    <h3>Update Purchase Order</h3>
+    <p><strong>PUT /api/purchase_orders/{po_id}/</strong><br>
+    <strong>Body:</strong> json<br>
+    <strong>Required fields:</strong> id, po_number, order_date, delivery_date, items, quantity, status, quality_rating, issue_date, acknowledgment_date, vendor</p>
+    <code>
+    {
+        "id": 1,
+        "po_number": "po_number",
+        "order_date": "order_date",
+        "delivery_date": "delivery_date",
+        "items": "{ json data }",
+        "quantity": "quantity",
+        "status": "status",
+        "quality_rating": "quality_rating",
+        "issue_date": "issue_date",
+        "acknowledgment_date": "acknowledgment_date",
+        "vendor": "vendor_id"
+    }
+    </code>
+
+    <h3>Delete Purchase Order</h3>
+    <p><strong>DELETE /api/purchase_orders/{po_id}/</strong><br>
+    <strong>Parameter:</strong> id (int) - Delete the specific purchase order.</p>
+
+    <h2>Historical Performance</h2>
+
+    <h3>Get the historical_performance of vendor</h3>
+    <p><strong>GET /api/historical_performance/</strong><br>
+    <strong>Type:</strong> json<br>
+    <strong>Description:</strong> Get the historical_performance of vendor.</p>
+
 </body>
 </html>
