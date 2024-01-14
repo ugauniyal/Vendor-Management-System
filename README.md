@@ -260,3 +260,7 @@ Celery Beat for automatic scheduler
 ```bash
   celery -A mysite beat -l info
 ```
+
+## Deployment
+
+https://vendor-management-system-d656.onrender.com/
