@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -108,3 +109,20 @@ class AcknowledgePurchaseOrderView(generics.UpdateAPIView):
 def trigger_performance_email(request):
     send_performance_email_to_vendors.delay()
     return Response({"message": "Performance email task triggered successfully."})
+
+
+
+def home(request):
+    # Provide a simple explanation of the available APIs
+    api_info = [
+        "1. GET/POST /api/vendors/ - List/Create Vendors",
+        "2. GET/PUT/DELETE /api/vendors/<int:pk>/ - Retrieve/Update/Delete Vendor",
+        "3. GET/POST /api/purchase_orders/ - List/Create Purchase Orders",
+        "4. GET/PUT/DELETE /api/purchase_orders/<int:pk>/ - Retrieve/Update/Delete Purchase Order",
+        "5. GET /api/historical_performance/ - List Historical Performances",
+        "6. GET /api/vendors/<int:pk>/performance/ - Retrieve Vendor Performance Metrics",
+        "7. PUT /api/purchase_orders/<int:pk>/acknowledge/ - Acknowledge Purchase Order",
+        "8. GET /trigger-performance-email/ - Trigger Performance Email Task",
+    ]
+
+    return render(request, 'home.html', {'api_info': api_info})

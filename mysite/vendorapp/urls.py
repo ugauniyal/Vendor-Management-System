@@ -22,4 +22,5 @@ urlpatterns = [
     path('api/purchase_orders/<int:pk>/acknowledge/', AcknowledgePurchaseOrderView.as_view(), name='acknowledge-purchase-order'),
     path('api-token-auth/', obtain_auth_token, name='token_obtain_pair'),
     path('trigger-performance-email/', views.trigger_performance_email, name='trigger-performance-email'),
+    path('', views.home, name='home'),
 ]
