@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
@@ -125,4 +125,4 @@ def home(request):
         "8. GET /trigger-performance-email/ - Trigger Performance Email Task",
     ]
 
-    return render(request, 'home.html', {'api_info': api_info})
+    return JsonResponse({'api_info': api_info}, safe=False)
