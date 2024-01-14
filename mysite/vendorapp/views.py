@@ -111,7 +111,6 @@ def trigger_performance_email(request):
     return Response({"message": "Performance email task triggered successfully."})
 
 
-
 def home(request):
     # Provide a simple explanation of the available APIs
     api_info = [
@@ -125,6 +124,6 @@ def home(request):
         "8. GET /trigger-performance-email/ - Trigger Performance Email Task",
     ]
 
-    api_info_with_line_breaks = "\\n".join(api_info)
+    api_info_with_line_breaks = "<br>".join(api_info)
 
     return JsonResponse({'api_info': api_info_with_line_breaks}, safe=False)
