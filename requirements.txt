@@ -4,7 +4,6 @@ djangorestframework==3.12.4
 drf-yasg==1.20.0
 python-dotenv==0.19.0
 dj-database-url==2.1.0
-typing_extension==4.7.0
 asgiref==3.7.2
 psycopg2-binary==2.9.6
 sqlparse==0.4.4
