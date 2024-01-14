@@ -125,4 +125,6 @@ def home(request):
         "8. GET /trigger-performance-email/ - Trigger Performance Email Task",
     ]
 
-    return JsonResponse({'api_info': api_info}, safe=False)
+    api_info_with_line_breaks = "\n".join(api_info)
+
+    return JsonResponse({'api_info': api_info_with_line_breaks}, safe=False)
